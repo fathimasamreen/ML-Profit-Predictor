@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}Profit Prediction - ML Predictor{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-lg prediction-card">
+            <div class="card-header bg-primary text-white">
+                <h2 class="card-title mb-0">
+                    <i class="fas fa-calculator me-2"></i>Company Profit Predictor
+                </h2>
+                <p class="card-subtitle mt-2 mb-0 opacity-75">
+                    Enter your company's financial parameters to predict profit using our trained ML model
+                </p>
+            </div>
+            <div class="card-body">
+                <!-- Loading Spinner -->
+                <div id="loadingSpinner" class="text-center d-none">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Calculating prediction...</p>
+                </div>
+
+                <!-- Prediction Form -->
+                <form id="predictionForm" method="POST" action="/predict" novalidate>
+                    <div class="row">
+                        <div class="col-md-4 mb-4">
+                            <label for="rd_spend" class="form-label fw-semibold">
+                                <i class="fas fa-flask me-1 text-primary"></i>R&D Spend
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text">₹</span>
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="rd_spend" 
+                                       name="rd_spend" 
+                                       step="0.01" 
+                                       min="0" 
+                                       placeholder="150000"
+                                       value="{{ input_rd if input_rd else '' }}"
+                                       required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-4">
+                            <label for="admin_cost" class="form-label fw-semibold">
+                                <i class="fas fa-cogs me-1 text-secondary"></i>Administration Cost
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text">₹</span>
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="admin_cost" 
+                                       name="admin_cost" 
+                                       step="0.01" 
+                                       min="0" 
+                                       placeholder="130000"
+                                       value="{{ input_admin if input_admin else '' }}"
+                                       required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-4">
+                            <label for="marketing_spend" class="form-label fw-semibold">
+                                <i class="fas fa-bullhorn me-1 text-warning"></i>Marketing Spend
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text">₹</span>
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="marketing_spend" 
+                                       name="marketing_spend" 
+                                       step="0.01" 
+                                       min="0" 
+                                       placeholder="471784"
+                                       value="{{ input_marketing if input_marketing else '' }}"
+                                       required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mb-4">
+                        <button type="submit" class="btn btn-success btn-lg px-5">
+                            <i class="fas fa-chart-line me-2"></i>Predict Profit
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Prediction Result Display -->
+                {% if prediction is not none %}
+                <div id="predictionResult" class="result-card mt-4">
+                    <div class="alert alert-success" role="alert">
+                        <h4 class="alert-heading">
+                            <i class="fas fa-trophy me-2"></i>Predicted Profit
+                        </h4>
+                        <hr>
+                        <div class="row text-center">
+                            <div class="col-12">
+                                <div class="display-4 fw-bold text-success" id="profitAmount">
+                                    ₹{{ prediction }}
+                                </div>
+                                <p class="mb-0 text-muted mt-2">Based on your input parameters</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row small">
+                            <div class="col-md-4 text-center">
+                                <strong>R&D Spend:</strong><br>
+                                <span class="text-muted" id="inputRD">₹{{ input_rd }}</span>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <strong>Admin Cost:</strong><br>
+                                <span class="text-muted" id="inputAdmin">₹{{ input_admin }}</span>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <strong>Marketing:</strong><br>
+                                <span class="text-muted" id="inputMarketing">₹{{ input_marketing }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Error Display -->
+                {% if error %}
+                <div id="errorMessage" class="alert alert-danger mt-4" role="alert">
+                    <h5 class="alert-heading">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Prediction Error
+                    </h5>
+                    <p class="mb-0" id="errorText">{{ error }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

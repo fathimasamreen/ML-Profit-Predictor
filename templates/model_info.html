@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}Model Information - ML Predictor{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card shadow-lg">
+            <div class="card-header bg-secondary text-white">
+                <h2 class="card-title mb-0">
+                    <i class="fas fa-brain me-2"></i>Machine Learning Model Information
+                </h2>
+                <p class="card-subtitle mt-2 mb-0 opacity-75">
+                    Details about Samreen Fathima's profit prediction model
+                </p>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4 class="text-primary mb-3">
+                            <i class="fas fa-info-circle me-2"></i>Model Overview
+                        </h4>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <strong>Purpose:</strong>
+                                <span>Predict company profit based on financial parameters</span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Input Features:</strong>
+                                <span>R&D Spend, Administration Cost, Marketing Spend</span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Output:</strong>
+                                <span>Predicted Company Profit (INR)</span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Model Type:</strong>
+                                <span>{{ metrics.model_type if metrics and metrics.model_type else 'Random Forest' }}</span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Status:</strong>
+                                <span>{{ metrics.status if metrics and metrics.status else 'Model not loaded' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h4 class="text-primary mb-3">
+                            <i class="fas fa-chart-bar me-2"></i>Performance Metrics
+                        </h4>
+                        <div class="metrics-grid">
+                            <div class="metric-card">
+                                <div class="metric-value text-success">{{ metrics.r2_score if metrics and metrics.r2_score else 'N/A' }}</div>
+                                <div class="metric-label">R² Score</div>
+                            </div>
+                            
+                            <div class="metric-card">
+                                <div class="metric-value text-info">{{ metrics.mae if metrics and metrics.mae else 'N/A' }}</div>
+                                <div class="metric-label">MAE</div>
+                            </div>
+                            
+                            <div class="metric-card">
+                                <div class="metric-value text-warning">{{ metrics.mse if metrics and metrics.mse else 'N/A' }}</div>
+                                <div class="metric-label">MSE</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Summary -->
+                <div class="project-section">
+                    <h3><i class="fas fa-chart-line me-2"></i>Project Summary: Startup Profit Prediction</h3>
+                    
+                    <h4>🔍 About the Data</h4>
+                    <p>The dataset contains financial information from 50 startups, including:</p>
+                    <ul>
+                        <li>R&D Spend</li>
+                        <li>Administration Cost</li>
+                        <li>Marketing Spend</li>
+                        <li>Profit (Target variable)</li>
+                    </ul>
+                    <p>The goal is to build a machine learning model that can predict a company's profit based on the other three inputs.</p>
+                    
+                    <h4>🧪 Model Training</h4>
+                    <p>To solve this regression problem, we trained two machine learning models:</p>
+                    <ul>
+                        <li><strong>Random Forest Regressor</strong> – a bagging-based ensemble model.</li>
+                        <li><strong>Gradient Boosting Regressor</strong> – a boosting-based ensemble model.</li>
+                    </ul>
+                    <p>Before training, we performed the following preprocessing steps:</p>
+                    <ul>
+                        <li>Handled any missing values.</li>
+                        <li>Split the data into training and testing sets (80/20 split).</li>
+                        <li>Applied standard scaling to normalize the input features using StandardScaler.</li>
+                    </ul>
+                    
+                    <h4>📈 Model Evaluation</h4>
+                    <p>We evaluated both models using standard regression metrics:</p>
+                    <ul>
+                        <li><strong>R² Score</strong> (explains how well the model fits the data)</li>
+                        <li><strong>Mean Absolute Error (MAE)</strong></li>
+                        <li><strong>Mean Squared Error (MSE)</strong></li>
+                    </ul>
+                    
+                    <div class="comparison-table">
+                        <table class="table table-striped mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Random Forest</th>
+                                    <th>Gradient Boosting</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>R² Score</strong></td>
+                                    <td>0.910</td>
+                                    <td>0.890</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>MAE</strong></td>
+                                    <td>6,437.50</td>
+                                    <td>8,664.90</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>MSE</strong></td>
+                                    <td>72,625,008.62</td>
+                                    <td>88,674,767.81</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h4>✅ Best Model Selection</h4>
+                    <p>After comparing both models:</p>
+                    <p>The <strong>Random Forest Regressor</strong> performed better on all evaluation metrics:</p>
+                    <ul>
+                        <li>Higher R² score → Better overall fit.</li>
+                        <li>Lower MAE and MSE → Smaller prediction errors.</li>
+                    </ul>
+                    <p>Therefore, Random Forest was selected as the final model for deployment.</p>
+                    
+                    <h4>💡 Why Random Forest?</h4>
+                    <ul>
+                        <li>It generalizes well, especially on small datasets like this one.</li>
+                        <li>Less sensitive to outliers and overfitting.</li>
+                        <li>Easier to interpret and debug than Gradient Boosting in small-scale projects.</li>
+                    </ul>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-calculator me-2"></i>Make a Prediction
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
